@@ -1,64 +1,75 @@
 # Loan Default Prediction
 
-This project uses real-world lending data from LendingClub (2007–2010) to predict whether a borrower will fully repay a loan.
-The key business goal is to help lenders reduce false positives — i.e., avoid approving loans to borrowers likely to default.
+This project uses real-world LendingClub data (2007–2010) to predict whether a borrower will fully repay a loan. The core business objective is to minimize false negatives — avoiding situations where a risky borrower is mistakenly approved.
+Because this is the most costly type of error, the project prioritizes Recall as the main evaluation metric.
 
-## Problem Statement
+**Problem Statement**
 
-Lending institutions lose heavily when loans are issued to borrowers who don’t repay.
-Our challenge: predict default risk and build a model that prioritizes precision, ensuring fewer risky borrowers are mistakenly approved.
+Lending institutions incur significant losses when borrowers fail to repay their loans. Our task is to predict default risk and build a model that can identify as many true defaulters as possible, preventing risky approvals.
 
-## Approach
+##Approach
 
-## Exploratory Data Analysis (EDA):
+**Exploratory Data Analysis (EDA):**
+Revealed that low FICO scores, high interest rates, recent credit inquiries, and small-business loan purposes were strong indicators of default. Revolving utilization and installment size also showed meaningful patterns.
 
-Found that low FICO scores (<700), high interest rates, and small business loans are the strongest risk indicators.
+**Preprocessing:**
 
-Outliers in revolving balance showed 2x higher default rates, highlighting financial strain signals.
+One-hot encoding for loan purpose
 
-## Preprocessing:
+Scaling for numeric features
 
-One-hot encoding for categorical features (purpose), scaling for numerical features.
+Outlier treatment (log transform for skewed variables)
 
-Outlier treatment (log transform on skewed features).
+**Class Imbalance Handling:**
+Compared SMOTE oversampling vs. class weights.
+Class weights performed best for linear models such as Logistic Regression.
 
-## Class Imbalance Handling:
+**Models Compared:**
 
-Compared class weights vs. SMOTE oversampling.
+Logistic Regression
 
-## Final choice: 
-class weights for Logistic/SVM, SMOTE for tree-based models.
+Support Vector Machine
 
-## Models Compared:
-
-Logistic Regression, Support Vector Machine, Random Forest, XGBoost.
-
-## Focus metric: Precision (to minimize false positives).
-
-## Results
-
-XGBoost (tuned) gave the best balance with ~0.55 precision, outperforming Logistic Regression (~0.40) and Random Forest (~0.33).
-
-## Key insights for lenders:
-
-Borrowers with FICO < 700 or small business loans had 2–3x higher chance of default.
-
-High interest rates and multiple credit inquiries further increased risk.
-
-# Tech Stack
-
-Python (pandas, NumPy, matplotlib, seaborn)
-
-Scikit-learn (Logistic Regression, SVM, Random Forest, pipelines, preprocessing)
+Random Forest
 
 XGBoost
 
-imblearn (SMOTE)
+**Focus Metric:**
+Recall — to minimize false negatives (approving borrowers who later default).
+
+**Results**
+
+Logistic Regression outperformed all other models on Recall, achieving ~0.57.
+This made it the best option for the business goal of capturing as many defaulters as possible.
+
+## Key Insights
+
+Borrowers with FICO < 700 or small business loan purposes had 2–3× higher default risk.
+
+High interest rates and multiple recent inquiries were strong risk indicators.
+
+Income, installment size, and revolving utilization added additional predictive power.
+
+Loan purpose plays a major role — especially small business loans.
+
+## Tech Stack
+
+Python (pandas, NumPy, matplotlib, seaborn)
+
+scikit-learn (Logistic Regression, SVM, Random Forest, pipelines, preprocessing)
+
+imbalanced-learn (class weights, SMOTE)
+
+XGBoost (model comparison)
 
 ## Future Work
 
-Ensemble methods (stacking/blending) to push precision higher.
+Improve Recall further through advanced feature engineering
 
-More advanced feature engineering (interaction terms, time-based features).
+Try ensemble methods (stacking, blending)
 
-Evaluation on more recent datasets for generalization.
+Conduct threshold tuning for better risk segmentation
+
+Test on more recent datasets for generalization
+
+
